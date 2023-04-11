@@ -1,3 +1,5 @@
+import { json } from './middlewares/json.js' // é necessário colocar a extensão do arquivo no ESMODULE
+
 // importando o módulo de http
 // Para importação de módulos internos, a documentação determina que devemos utilizar 'node:'
 import http from 'node:http'
@@ -14,19 +16,8 @@ const users = []
 const server = http.createServer(async (request, response) => {
   const { method, url } = request
 
-  const buffers = []
-
-  // percorrer cada pedaço da stream de requisição e adicionar ao array de buffers
-  for await (const chunk of request) {
-    buffers.push(chunk)
-  }
-
-  // o await não permite que nada execute enquanto o carregamento da stream não finalizar
-  try {
-    request.body = JSON.parse(Buffer.concat(buffers).toString())
-  } catch {
-    request.body = null
-  }
+  // chamando o middleware
+  await json(request, response)
 
 
   // Exemplo de uma mesma url com diferentes métodos e diferentes retornos
@@ -34,7 +25,6 @@ const server = http.createServer(async (request, response) => {
 
     // Transformando o retorno em JSON - Javascript Object Notation
     return response
-      .setHeader('Content-type', 'application/json')
       .end(JSON.stringify(users))
   }
 
