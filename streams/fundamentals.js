@@ -16,8 +16,9 @@
 
 
 // Criando uma stream de leitura do zero
-import { Readable } from 'node:stream'
+import { Readable, Writable, Transform } from 'node:stream'
 
+// stream de leitura
 class OneToHundredStream extends Readable {
   index = 1
 
@@ -32,11 +33,37 @@ class OneToHundredStream extends Readable {
       } else {
         // não aceita dados no formato primitivo, será necessário trabalhar com buffers
         const buff = Buffer.from(String(i)) // convertendo i para um buffer
-  
+
         this.push(buff)
       }
     }, 1000)
   }
 }
 
-new OneToHundredStream().pipe(process.stdout)
+// stream de transformação
+class InverseNumberStream extends Transform {
+  _transform(chunk, encoding, callback) {
+    const transformed = Number(chunk.toString()) * -1
+
+    callback(null, Buffer.from(String(transformed)))
+    // O primeiro parâmetro de um callback é o erro
+    // o segundo parâmetro é o dado transformado
+  }
+}
+
+// stream de escrita
+class MultiplyByTenStream extends Writable {
+  _write(chunk, encoding, callback) {
+    // chunk é o pedaço
+    // enconding é como a informação está codificada
+    // callback é uma função que a stream de escrita precisa chamar ao finalizar
+
+    console.log(Number(chunk.toString() * 10))
+
+    callback()
+  }
+}
+
+new OneToHundredStream()
+  .pipe(new InverseNumberStream())
+  .pipe(new MultiplyByTenStream())
