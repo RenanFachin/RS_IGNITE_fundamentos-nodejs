@@ -53,4 +53,27 @@ export class Database {
     // retornando o item inserido
     return data
   }
+
+  delete(table, id) {
+    // Percorrendo cada registro e procurando se existe um usuário com id igual ao id recebido pela rota
+    const rowIndex = this.#database[table].findIndex(row => row.id === id)
+
+    // Caso ele não encontre, o retorno é -1
+    if (rowIndex > -1) {
+      this.#database[table].splice(rowIndex, 1)
+      this.#persist() // persistindo no banco de dados
+    }
+  }
+
+  update(table, id, data) {
+    // Percorrendo cada registro e procurando se existe um usuário com id igual ao id recebido pela rota
+    const rowIndex = this.#database[table].findIndex(row => row.id === id)
+
+    // Caso ele não encontre, o retorno é -1
+    if (rowIndex > -1) {
+      // Atualizando apenas a linha desajada [rowIndex], caso não tenha esta info, toda a tabela será atualizada para um único registro
+      this.#database[table][rowIndex] = { id, ...data }
+      this.#persist() // persistindo no banco de dados
+    }
+  }
 }
