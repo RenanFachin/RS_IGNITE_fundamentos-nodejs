@@ -8,6 +8,8 @@ import { Database } from './database.js'
 // é necessário colocar a extensão do arquivo no ESMODULE
 import { json } from './middlewares/json.js'
 
+import { randomUUID } from 'node:crypto'
+
 // Aplicação em stateful -> os dados sao guardados em memória e são apagados assim que a aplicação for derrubada
 
 // Cabeçalhos (Requisição/Resposnse) => metadados
@@ -38,7 +40,7 @@ const server = http.createServer(async (request, response) => {
 
 
     const user = {
-      id: 1,
+      id: randomUUID(),
       name,
       email,
     }
