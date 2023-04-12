@@ -1,15 +1,18 @@
-import { json } from './middlewares/json.js' // é necessário colocar a extensão do arquivo no ESMODULE
-
 // importando o módulo de http
 // Para importação de módulos internos, a documentação determina que devemos utilizar 'node:'
 import http from 'node:http'
+
+// Importando o database
+import { Database } from './database.js'
+
+// é necessário colocar a extensão do arquivo no ESMODULE
+import { json } from './middlewares/json.js'
 
 // Aplicação em stateful -> os dados sao guardados em memória e são apagados assim que a aplicação for derrubada
 
 // Cabeçalhos (Requisição/Resposnse) => metadados
 
-const users = []
-
+const database = new Database()
 
 // Criando servidor http
 // createServer recebe 2 parâmetros: request e response
@@ -23,9 +26,10 @@ const server = http.createServer(async (request, response) => {
   // Exemplo de uma mesma url com diferentes métodos e diferentes retornos
   if (method === 'GET' && url === '/users') {
 
+    const users = database.select('users')
+
     // Transformando o retorno em JSON - Javascript Object Notation
-    return response
-      .end(JSON.stringify(users))
+    return response.end(JSON.stringify(users))
   }
 
   if (method === 'POST' && url === '/users') {
@@ -33,11 +37,14 @@ const server = http.createServer(async (request, response) => {
     const { name, email } = request.body
 
 
-    users.push({
+    const user = {
       id: 1,
-      name: name,
-      email: email
-    })
+      name,
+      email,
+    }
+
+    database.insert('users', user);
+
 
     return response.writeHead(201).end()
   }
