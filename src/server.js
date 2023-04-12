@@ -12,13 +12,17 @@ const server = http.createServer(async (request, response) => {
 
   // Procurando no array routes, um objeto que contenha mesmo método e path
   const route = routes.find(route => {
-    return route.method === method && route.path === url
+    return route.method === method && route.path.test(url)
   })
 
   // console.log(route) -> validando a chamada pra rota
 
   // Caso a rota exista, fazer a chamada para a função
   if (route) {
+    const routeParams = request.url.match(route.path)
+
+    console.log(routeParams)
+
     return route.handler(request, response)
   }
 
