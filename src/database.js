@@ -27,12 +27,26 @@ export class Database {
     fs.writeFile(databasePath, JSON.stringify(this.#database))
   }
 
-  select(table) {
+  select(table, search) {
     /* 
     Procurando a chave table dentro do objeto database e caso não exista,
     dizer que o array é vazio para que não tenha um undefined como retorno
     */
-    const data = this.#database[table] ?? []
+    let data = this.#database[table] ?? []
+
+    // Filtro de busca
+    if (search) {
+      data = data.filter(row => {
+        // some percorre um array e se pelo menos em uma iteração retornar true, quer dizer que este item deve ser incluido no filter 
+
+        // {name: "renan", email: "renan"}
+        // [ ['name', 'renan'] , ['email', 'renan']]
+        // [ [key, value] , [key, value]]
+        return Object.entries(search).some(([key, value]) => {
+          return row[key].toLowerCase().includes(value.toLowerCase())
+        })
+      })
+    }
 
 
     return data

@@ -11,7 +11,14 @@ export const routes = [
     method: 'GET',
     path: buildRoutePath('/users'),
     handler: (request, response) => {
-      const users = database.select('users')
+      const { search } = request.query
+
+      // search ? => enviando somente se houver um query params search
+      const users = database.select('users', search ? {
+        // Realizando a busca em ambos os campos
+        name: search,
+        email: search
+      }: null)
 
       return response.end(JSON.stringify(users))
     }

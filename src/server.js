@@ -1,6 +1,7 @@
 import http from 'node:http'
 import { json } from './middlewares/json.js'
 import { routes } from './routes.js'
+import { extractQueryParams } from './utils/extract-query-params.js'
 
 // Criando servidor http
 // createServer recebe 2 parâmetros: request e response
@@ -21,7 +22,11 @@ const server = http.createServer(async (request, response) => {
   if (route) {
     const routeParams = request.url.match(route.path)
 
-    request.params = { ... routeParams.groups}
+    // Destruturando o que está sendo recebido pelor params darota
+    const { query, ...params } = routeParams.groups
+
+    request.params = params
+    request.query = query ? extractQueryParams(query) : {}
 
     return route.handler(request, response)
   }

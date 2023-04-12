@@ -1,1 +1,19 @@
-{"users":[{"id":"b45d9dcf-994f-4fdf-8ef3-291e66e42a81","name":"Renan Fachin","email":"renan@email.com"},{"id":"e4d9ed82-9fee-4e98-9935-e498f14f66c0","name":"John Doe","email":"johndoe@email.com"}]}
+{
+  "users": [
+    {
+      "id": "b45d9dcf-994f-4fdf-8ef3-291e66e42a81",
+      "name": "Renan Fachin",
+      "email": "renan@email.com"
+    },
+    {
+      "id": "e4d9ed82-9fee-4e98-9935-e498f14f66c0",
+      "name": "John Doe",
+      "email": "johndoe@email.com"
+    },
+    {
+      "id": "c0541336-414f-4919-9257-9a6017ca3aa8",
+      "name": "Renan Fachin",
+      "email": "renan@email.com"
+    }
+  ]
+}
